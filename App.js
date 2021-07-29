@@ -1,21 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import firebase from 'firebase/app'
+import { Provider } from "react-native-paper";
+import { theme } from "./theme";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "react-native-screens/native-stack";
+import {StartScreen, LoginScreen, RegisterScreen, ResetPasswordScreen, HomeScreen, AuthLoadingScreen} from "./screens";
+import { firebaseConfig } from "./config";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+if(!firebase.apps.length){
+    firebase.initializeApp(firebaseConfig)
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const Stack = createNativeStackNavigator();
+
+export default function App() {
+
+  return (
+      <Provider theme={theme}>
+          <NavigationContainer>
+              <Stack.Navigator initialRoutename='AuthLoadingScreen' screenOptions={{headerShown: false}}>
+                  <Stack.Screen name="AuthLoadingScreen" component={AuthLoadingScreen} />
+                  <Stack.Screen name="StartScreen" component={StartScreen} />
+                  <Stack.Screen name="LoginScreen" component={LoginScreen} />
+                  <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+                  <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
+                  <Stack.Screen name="HomeScreen" component={HomeScreen} />
+              </Stack.Navigator>
+          </NavigationContainer>
+      </Provider>
+  );
+}
